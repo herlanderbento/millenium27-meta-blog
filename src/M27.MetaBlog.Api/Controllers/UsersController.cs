@@ -4,6 +4,7 @@ using MediatR;
 using M27.MetaBlog.Api.Presenters;
 using M27.MetaBlog.Application.UseCases.User.Common;
 using M27.MetaBlog.Application.UseCases.User.CreateUser;
+using M27.MetaBlog.Application.UseCases.User.GetUser;
 
 namespace M27.MetaBlog.Api.Controllers;
 
@@ -28,5 +29,17 @@ public class UsersController(IMediator mediator) : ControllerBase
             new { output.Id },
             new ApiPresenter<UserOutput>(output)
         );
+    }
+    
+    [HttpGet("{id:guid}")]
+    [ProducesResponseType(typeof(ApiPresenter<UserOutput>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetById(
+        [FromRoute] Guid id,
+        CancellationToken cancellationToken
+    )
+    {
+        var output = await _mediator.Send(new GetUserInput(id), cancellationToken);
+        return Ok(new ApiPresenter<UserOutput>(output));
     }
 }

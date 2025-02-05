@@ -33,15 +33,20 @@ public class User: AggregateRoot
         
     }
 
-    public void Update(string? name, string? email, string? password, UserRole? role)
+    public void Update(string? name, string? email, UserRole? role, bool? isActive)
     {
         Name = name ?? Name;
         Email = email ?? Email;
-        Password = password ?? Password;
+        IsActive = isActive ?? IsActive;
         Role = role ?? Role;
 
         UpdatedAt = DateTime.Now;
 
+    }
+
+    public void ChangePassword(string? password)
+    {
+        Password = password;
     }
     
     public void Activate()

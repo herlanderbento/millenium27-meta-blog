@@ -6,14 +6,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace M27.MetaBlog.Infra.Data.Repositories;
 
-public class UserRepository
-    : IUserRepository
+public class UserRepository(MetaBlogDbContext context) : IUserRepository
 {
-    private readonly MetaBlogDbContext _context;
+    private readonly MetaBlogDbContext _context = context;
     private DbSet<User> Users => _context.Set<User>();
-
-    public UserRepository(MetaBlogDbContext context)
-         =>  _context = context;
 
     public async Task Insert(User aggregate, CancellationToken cancellationToken)
         => await Users.AddAsync(aggregate, cancellationToken);
@@ -23,10 +19,9 @@ public class UserRepository
         var model = await Users.AsNoTracking().FirstOrDefaultAsync(
             x => x.Id == id, 
             cancellationToken
-            );
+        );
         
         NotFoundException.ThrowIfNull(model, $"User '{id}' not found.");
-
         return model!;
     }
     
@@ -41,17 +36,19 @@ public class UserRepository
     
     public async Task<SearchOutput<User>> Search(SearchInput input, CancellationToken cancellationToken)
     {
-            var toSkip = (input.Page - 1) * input.PerPage;
-            var query = Users.AsNoTracking();
-            query = AddOrderToQuery(query, input.OrderBy, input.Order);
-            if(!String.IsNullOrWhiteSpace(input.Search))
-                query = query.Where(x => x.Name.Contains(input.Search));
-            var total = await query.CountAsync(cancellationToken);
-            var items = await query
-                .Skip(toSkip)
-                .Take(input.PerPage)
-                .ToListAsync(cancellationToken);
-            return new SearchOutput<User>(input.Page, input.PerPage, total, items);
+        var toSkip = (input.Page - 1) * input.PerPage;
+        var query = Users.AsNoTracking();
+        query = AddOrderToQuery(query, input.OrderBy, input.Order);
+        if (!string.IsNullOrWhiteSpace(input.Search))
+            query = query.Where(x => x.Name.Contains(input.Search));
+
+        var total = await query.CountAsync(cancellationToken);
+        var items = await query
+            .Skip(toSkip)
+            .Take(input.PerPage)
+            .ToListAsync(cancellationToken);
+
+        return new SearchOutput<User>(input.Page, input.PerPage, total, items);
     }
     
     public Task Update(User aggregate, CancellationToken _)
@@ -66,21 +63,15 @@ public class UserRepository
         SearchOrder order
     )
     { 
-        var orderedQuery = (orderProperty.ToLower(), order) switch
+        return (orderProperty.ToLower(), order) switch
         {
-            ("name", SearchOrder.Asc) => query.OrderBy(x => x.Name)
-                .ThenBy(x => x.Id),
-            ("name", SearchOrder.Desc) => query.OrderByDescending(x => x.Name)
-                .ThenByDescending(x => x.Id),
+            ("name", SearchOrder.Asc) => query.OrderBy(x => x.Name).ThenBy(x => x.Id),
+            ("name", SearchOrder.Desc) => query.OrderByDescending(x => x.Name).ThenByDescending(x => x.Id),
             ("id", SearchOrder.Asc) => query.OrderBy(x => x.Id),
             ("id", SearchOrder.Desc) => query.OrderByDescending(x => x.Id),
             ("createdAt", SearchOrder.Asc) => query.OrderBy(x => x.CreatedAt),
             ("createdAt", SearchOrder.Desc) => query.OrderByDescending(x => x.CreatedAt),
-            _ => query.OrderBy(x => x.Name)
-                .ThenBy(x => x.Id)
+            _ => query.OrderBy(x => x.Name).ThenBy(x => x.Id)
         };
-        return orderedQuery;
     }
-
-
 }
