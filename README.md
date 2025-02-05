@@ -14,7 +14,7 @@
 
 - Simply clone the Repository:
 ```sh
-git clone https://github.com/herlanderbento/micro-video-catalog-dotnet
+git clone https://github.com/herlanderbento/millenium27-meta-blog
 ```
 
 - Then run the solution file with Rider
