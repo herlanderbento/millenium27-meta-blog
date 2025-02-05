@@ -1,0 +1,39 @@
+version: "3.8"
+
+services:
+  m27.meta_blog-api:
+    build:
+      context: ./src
+      dockerfile: M27.MetaBlog.Api/Dockerfile
+    container_name: m27.meta_blog_api
+    depends_on:
+      m27.meta_blog_db:
+        condition: service_healthy
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__MetaBlogDb=Host=m27.meta_blog_db;Port=5432;Database=m27.meta_blog_db;Username=m27.meta_blog_user;Password=m27.meta_blog_password
+    ports:
+      - "8080:80"
+    restart: always
+
+  m27.meta_blog_db:
+    image: postgres:16
+    container_name: meta_blog_db
+    hostname: localhost
+    environment:
+      POSTGRES_DB: m27.meta_blog_db
+      POSTGRES_USER: m27.meta_blog_user
+      POSTGRES_PASSWORD: m27.meta_blog_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U m27.meta_blog_user -d m27.meta_blog_db"]
+      interval: 10s
+      retries: 5
+      timeout: 5s
+
+volumes:
+  postgres_data:
