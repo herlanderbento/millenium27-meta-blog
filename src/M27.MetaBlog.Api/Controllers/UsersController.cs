@@ -9,15 +9,12 @@ namespace M27.MetaBlog.Api.Controllers;
 
 [ApiController]
 [Route("/api/users")]
-public class UsersController : ControllerBase
+public class UsersController(IMediator mediator) : ControllerBase
 {
-    private readonly IMediator _mediator;
-
-    public UsersController(IMediator mediator)
-        => _mediator = mediator;
+    private readonly IMediator _mediator = mediator;
     
     [HttpPost]
-    [ProducesResponseType(typeof(CollectionPresenter<UserOutput>), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ApiPresenter<UserOutput>), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status422UnprocessableEntity)]
     public async Task<IActionResult> Create(
@@ -29,7 +26,7 @@ public class UsersController : ControllerBase
         return CreatedAtAction(
             nameof(Create),
             new { output.Id },
-            new CollectionPresenter<UserOutput>(output)
+            new ApiPresenter<UserOutput>(output)
         );
     }
 }

@@ -2,26 +2,26 @@
 
 namespace M27.MetaBlog.Api.Presenters;
 
-public class CollectionPresenterList<TItemData>
-: CollectionPresenter<IReadOnlyList<TItemData>>
+public class ApiPresenterList<TItemData>
+: ApiPresenter<IReadOnlyList<TItemData>>
 {
-    public PaginationPresenter Meta { get; private set; }
+    public ApiPaginationPresenter Meta { get; private set; }
     
-    public CollectionPresenterList(
+    public ApiPresenterList(
         int currentPage,
         int perPage,
         int total,
         IReadOnlyList<TItemData> data
     ) : base(data)
     {
-        Meta = new PaginationPresenter(currentPage, perPage, total);
+        Meta = new ApiPaginationPresenter(currentPage, perPage, total);
     }
     
-    public CollectionPresenterList(
+    public ApiPresenterList(
         PaginatedListOutput<TItemData> paginatedListOutput
     ) : base(paginatedListOutput.Items)
     {
-        Meta = new PaginationPresenter(
+        Meta = new ApiPaginationPresenter(
             paginatedListOutput.Page,
             paginatedListOutput.PerPage,
             paginatedListOutput.Total

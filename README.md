@@ -14,7 +14,7 @@
 
 - Simply clone the Repository:
 ```sh
-git clone https://github.com/herlanderbento/millenium27-meta-blog
+git clone https://github.com/herlanderbento/millenium27-meta-blog.git
 ```
 
 - Then run the solution file with Rider

@@ -12,7 +12,10 @@ public class CreateUser: ICreateUser
     private readonly IUnitOfWork _unitOfWork;
     private readonly ICryptography _cryptography;
 
-    public CreateUser(IUserRepository userRepository, IUnitOfWork unitOfWork, ICryptography cryptography)
+    public CreateUser(
+        IUserRepository userRepository, 
+        IUnitOfWork unitOfWork, 
+        ICryptography cryptography)
     {
         _userRepository = userRepository;
         _unitOfWork = unitOfWork;
@@ -20,7 +23,9 @@ public class CreateUser: ICreateUser
     }
 
 
-    public async Task<UserOutput> Handle(CreateUserInput input, CancellationToken cancellationToken)
+    public async Task<UserOutput> Handle(
+        CreateUserInput input, 
+        CancellationToken cancellationToken)
     {
         var user = await _userRepository.GetByEmail(input.Email, cancellationToken);
         
