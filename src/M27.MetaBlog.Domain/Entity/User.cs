@@ -40,7 +40,7 @@ public class User: AggregateRoot
         IsActive = isActive ?? IsActive;
         Role = role ?? Role;
 
-        UpdatedAt = DateTime.Now;
+        UpdatedAt = DateTime.UtcNow;
 
     }
 

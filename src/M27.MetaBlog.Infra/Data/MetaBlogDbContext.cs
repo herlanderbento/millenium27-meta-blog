@@ -17,17 +17,17 @@ public class MetaBlogDbContext: DbContext
         builder.ApplyConfiguration(new UserConfiguration());
     }
     
-    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new())
-    {
-        var entries = ChangeTracker
-            .Entries<User>()
-            .Where(e => e.State == EntityState.Modified);
-
-        foreach (var entry in entries)
-        {
-            entry.Property("LastUpdated").CurrentValue = DateTime.Now;
-        }
-
-        return base.SaveChangesAsync(cancellationToken);
-    }
+    // public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new())
+    // {
+    //     var entries = ChangeTracker
+    //         .Entries<User>()
+    //         .Where(e => e.State == EntityState.Modified);
+    //
+    //     foreach (var entry in entries)
+    //     {
+    //         entry.Property("UpdatedAt").CurrentValue = DateTime.Now;
+    //     }
+    //
+    //     return base.SaveChangesAsync(cancellationToken);
+    // }
 }

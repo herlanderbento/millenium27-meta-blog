@@ -22,6 +22,7 @@ public class UpdateUserInput
         UserRole? role = UserRole.User, 
         bool? isActive = null)
     {
+        Id = id;
         Name = name;
         Email = email;
         Password = password;

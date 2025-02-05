@@ -30,9 +30,16 @@ public class UpdateUser : IUpdateUser
         
         NotFoundException.ThrowIfNull(user, $"User '{input.Id}' not found");
 
+        if (user.Email != input.Email)
+        {
+            var userWithSameEmail = await _userRepository.GetByEmail(input.Email!, cancellationToken);
+            
+            ConflictException.ThrowIfNotNull(userWithSameEmail, $"User with this email '{input.Email}' already exists");
+        }
+
         user.Update(input.Name, input.Email, input.Role, input.IsActive);
         
-        if (input.Password != null)
+        if (!string.IsNullOrEmpty(input.Password))  
         {
             var hashedPassword = await _cryptography.HashPassword(input.Password, cancellationToken);
             
