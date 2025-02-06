@@ -24,11 +24,11 @@ public class UsersController(IMediator mediator) : ControllerBase
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status422UnprocessableEntity)]
     public async Task<IActionResult> Create(
-        [FromBody] CreateUserInput input,
+        [FromBody] CreateUserInput request,
         CancellationToken cancellationToken
     )
     {
-        var output = await _mediator.Send(input, cancellationToken);
+        var output = await _mediator.Send(request, cancellationToken);
         return CreatedAtAction(
             nameof(Create),
             new { output.Id },
@@ -37,6 +37,7 @@ public class UsersController(IMediator mediator) : ControllerBase
     }
     
     [HttpGet]
+    [Authorize(Policy = "AdminOnly")]
     [ProducesResponseType(typeof(ListUsersOutput), StatusCodes.Status200OK)]
     public async Task<IActionResult> List(
         CancellationToken cancellationToken,        
@@ -78,17 +79,17 @@ public class UsersController(IMediator mediator) : ControllerBase
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status422UnprocessableEntity)]
     public async Task<IActionResult> Update(
         [FromRoute] Guid id,
-        [FromBody] UpdateUserApiInput apiInput,
+        [FromBody] UpdateUserApiInput request,
         CancellationToken cancellationToken
     )
     {
         var input = new UpdateUserInput(
             id, 
-            apiInput.Name, 
-            apiInput.Email, 
-            apiInput.Password,
-            apiInput.Role, 
-            apiInput.IsActive
+            request.Name, 
+            request.Email, 
+            request.Password,
+            request.Role, 
+            request.IsActive
         );
         
         var output = await _mediator.Send(input, cancellationToken);

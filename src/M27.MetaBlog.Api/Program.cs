@@ -1,3 +1,4 @@
+using M27.MetaBlog.Api.Authorization;
 using M27.MetaBlog.Api.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,10 +10,16 @@ builder.Configuration
     .AddJsonFile("appsettings.Migrations.json", optional: true, reloadOnChange: true)
     .AddEnvironmentVariables();  
 
+//builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("Jwt"));
 builder.Services
     .AddAppConections(builder.Configuration)
+    .AddSecurity(builder.Configuration)
     .AddUseCases()
     .AddAndConfigureControllers()
+    .AddAuthorization(options =>
+    {
+        options.AddPolicy("Bearer", policy => policy.RequireAuthenticatedUser());
+    })
     .AddHttpLogging(logging =>
     {
         logging.LoggingFields = Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.All;
@@ -29,8 +36,8 @@ var app = builder.Build();
 app.UseHttpLogging();
 app.UseDocumentation();
 app.UseCors("CORS");
-// app.UseAuthentication();
-// app.UseAuthorization();
+app.UseAuthentication();
+app.UseAuthorization();
 app.MapControllers();
 
 app.Run();

@@ -10,7 +10,7 @@ public class BCryptHasher: ICryptography
         return Task.FromResult(BCrypt.Net.BCrypt.HashPassword(password, WorkFactor));
     }
 
-    public Task Verify(string password, string passwordHash, CancellationToken cancellationToken)
+    public Task<bool> Verify(string password, string passwordHash, CancellationToken cancellationToken)
     {
         return Task.FromResult(BCrypt.Net.BCrypt.Verify(password, passwordHash));
     }

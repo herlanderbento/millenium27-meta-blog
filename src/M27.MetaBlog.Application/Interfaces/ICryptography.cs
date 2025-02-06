@@ -3,5 +3,5 @@
 public interface ICryptography
 {
     Task<string> HashPassword(string password, CancellationToken cancellationToken);
-    Task Verify(string password, string passwordHash, CancellationToken cancellationToken);
+    Task<bool> Verify(string password, string passwordHash, CancellationToken cancellationToken);
 }

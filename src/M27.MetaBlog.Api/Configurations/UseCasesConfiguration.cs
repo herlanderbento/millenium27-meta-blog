@@ -1,9 +1,11 @@
 ﻿using M27.MetaBlog.Application.Interfaces;
+using M27.MetaBlog.Application.UseCases.User.Authenticate;
 using M27.MetaBlog.Application.UseCases.User.CreateUser;
 using M27.MetaBlog.Domain.Repository;
 using M27.MetaBlog.Infra.Cryptography;
 using M27.MetaBlog.Infra.Data;
 using M27.MetaBlog.Infra.Data.Repositories;
+using M27.MetaBlog.Infra.Security;
 
 namespace M27.MetaBlog.Api.Configurations;
 
@@ -15,6 +17,7 @@ public static class UseCasesConfiguration
     )
     {
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateUser).Assembly));
+        services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Authenticate).Assembly));
         services.AddRepositories();
         return services;
     }
@@ -26,7 +29,8 @@ public static class UseCasesConfiguration
         services.AddTransient<IUserRepository, UserRepository>();
         services.AddTransient<IUnitOfWork, UnitOfWork>();
         services.AddTransient<ICryptography, BCryptHasher>();
-
+        services.AddSingleton<ITokenProvider, JwtTokenService>();
+        
         return services;
     }
     
