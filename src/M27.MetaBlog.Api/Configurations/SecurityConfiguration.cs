@@ -1,7 +1,8 @@
+using System.Security.Cryptography;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using M27.MetaBlog.Api.Authorization;
+
+namespace M27.MetaBlog.Api.Configurations;
 
 public static class SecurityConfiguration
 {
@@ -9,14 +10,11 @@ public static class SecurityConfiguration
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        services.Configure<JwtOptions>(configuration.GetSection("Jwt"));
-        
-        var jwtSettings = configuration.GetSection("Jwt").Get<JwtOptions>();
+        var privateKeyBase64 = configuration["Jwt:PrivateKey"] ?? throw new ArgumentNullException("Jwt:PrivateKey is missing in configuration.");
+        var publicKeyBase64 = configuration["Jwt:PublicKey"] ?? throw new ArgumentNullException("Jwt:PublicKey is missing in configuration.");
 
-        if (string.IsNullOrWhiteSpace(jwtSettings?.SecretKey))
-        {
-            throw new ArgumentNullException("Jwt:SecretKey", "The JWT secret key cannot be null.");
-        }
+        using var rsaPublic = RSA.Create();
+        rsaPublic.ImportRSAPublicKey(Convert.FromBase64String(publicKeyBase64), out _);
 
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
@@ -26,10 +24,10 @@ public static class SecurityConfiguration
                     ValidateIssuer = true,
                     ValidateAudience = true,
                     ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
-                    ValidIssuer = jwtSettings.Issuer,
-                    ValidAudience = jwtSettings.Audience,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.SecretKey))
+                    ValidateIssuerSigningKey = false,
+                    ValidIssuer = configuration["Jwt:Issuer"],
+                    ValidAudience = configuration["Jwt:Audience"],
+                    IssuerSigningKey = new RsaSecurityKey(rsaPublic)
                 };
             });
 
