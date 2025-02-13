@@ -18,7 +18,10 @@ public class DeleteCategory : IDeleteCategory
         _unitOfWork = unitOfWork;
     }
 
-    public async Task Handle(DeleteCategoryInput input, CancellationToken cancellationToken)
+    public async Task Handle(
+        DeleteCategoryInput input, 
+        CancellationToken cancellationToken
+        )
     {
         var category = await _categoryRepository.GetById(input.Id, cancellationToken);
         

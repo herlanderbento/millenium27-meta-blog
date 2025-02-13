@@ -34,7 +34,6 @@ public class UpdateCategoryInputValidator : AbstractValidator<UpdateCategoryInpu
             .MaximumLength(255).WithMessage("Category name must not exceed 255 characters.");
 
         RuleFor(x => x.Description)
-            .Null()
             .MaximumLength(10_000).WithMessage("Description must not exceed 10_000 characters.");
     }
 }

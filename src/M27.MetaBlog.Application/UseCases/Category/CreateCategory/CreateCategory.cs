@@ -11,13 +11,19 @@ public class CreateCategory: ICreateCategory
     private readonly ICategoryRepository _categoryRepository;
     private readonly IUnitOfWork _unitOfWork;
 
-    public CreateCategory(ICategoryRepository categoryRepository, IUnitOfWork unitOfWork)
+    public CreateCategory(
+        ICategoryRepository categoryRepository, 
+        IUnitOfWork unitOfWork
+        )
     {
         _categoryRepository = categoryRepository;
         _unitOfWork = unitOfWork;
     }
 
-    public async  Task<CategoryOutput> Handle(CreateCategoryInput input, CancellationToken cancellationToken)
+    public async  Task<CategoryOutput> Handle(
+        CreateCategoryInput input, 
+        CancellationToken cancellationToken
+        )
     {
         var category = await _categoryRepository.GetByName(input.Name, cancellationToken);
         
