@@ -7,6 +7,8 @@ namespace M27.MetaBlog.Infra.Data;
 public class MetaBlogDbContext: DbContext
 {
     public DbSet<User> Users => Set<User>();
+    public DbSet<Category> Categories => Set<Category>();
+
 
     public MetaBlogDbContext(DbContextOptions options) : base(options)
     {

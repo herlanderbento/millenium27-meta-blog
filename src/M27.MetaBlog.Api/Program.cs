@@ -1,4 +1,3 @@
-
 using M27.MetaBlog.Api.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +14,7 @@ builder.Services
     .AddAppConections(builder.Configuration)
     .AddSecurity(builder.Configuration)
     .AddUseCases()
+    
     .AddAndConfigureControllers()
     .AddHttpLogging(logging =>
     {

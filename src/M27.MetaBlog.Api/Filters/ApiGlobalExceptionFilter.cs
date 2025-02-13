@@ -15,12 +15,12 @@ public class ApiGlobalExceptionFilter : IExceptionFilter
         var details = new ProblemDetails();
         var exception = context.Exception;
 
-        if(exception is EntityValidationException)
+        if(exception is EntityValidationException entityValidationException)
         {
             details.Title = "One or more validation errors ocurred";
             details.Status = StatusCodes.Status422UnprocessableEntity;
             details.Type = "UnprocessableEntity";
-            details.Detail = exception!.Message;
+            details.Extensions["errors"] = entityValidationException.Message.Split(" | ");
         }
         else if (exception is NotFoundException)
         {

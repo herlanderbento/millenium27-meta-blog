@@ -1,6 +1,9 @@
-﻿using M27.MetaBlog.Application.Interfaces;
+﻿using FluentValidation;
+using M27.MetaBlog.Application.Interfaces;
+using M27.MetaBlog.Application.UseCases.Category.CreateCategory;
 using M27.MetaBlog.Application.UseCases.User.Authenticate;
 using M27.MetaBlog.Application.UseCases.User.CreateUser;
+using M27.MetaBlog.Application.UseCases.User.UpdateUser;
 using M27.MetaBlog.Domain.Repository;
 using M27.MetaBlog.Infra.Cryptography;
 using M27.MetaBlog.Infra.Data;
@@ -19,6 +22,7 @@ public static class UseCasesConfiguration
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateUser).Assembly));
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Authenticate).Assembly));
         services.AddRepositories();
+        services.AddValidators();
         return services;
     }
 
@@ -30,7 +34,18 @@ public static class UseCasesConfiguration
         services.AddTransient<IUnitOfWork, UnitOfWork>();
         services.AddTransient<ICryptography, BCryptHasher>();
         services.AddSingleton<ITokenProvider, JwtTokenService>();
+        services.AddTransient<ICategoryRepository, CategoryRepository>();
         
+        return services;
+    }
+    
+    private static IServiceCollection AddValidators(
+        this IServiceCollection services
+    )
+    {
+        services.AddValidatorsFromAssemblyContaining<CreateUserInputValidator>();
+        services.AddValidatorsFromAssemblyContaining<UpdateUserInputValidator>();
+        services.AddValidatorsFromAssemblyContaining<CreateCategoryInputValidator>();
         return services;
     }
     
