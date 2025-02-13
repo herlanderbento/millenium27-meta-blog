@@ -1,4 +1,5 @@
 ﻿using M27.MetaBlog.Api.Filters;
+using M27.MetaBlog.Api.Validators;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authorization;
 
@@ -19,6 +20,8 @@ public static class ControllersConfiguration
         {
             options.LowercaseUrls = true;
         });
+
+        services.AddScoped<RequestValidator>();
 
         services.AddDocumentation();
         return services;

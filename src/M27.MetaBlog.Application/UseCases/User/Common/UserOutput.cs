@@ -1,5 +1,4 @@
 ﻿using M27.MetaBlog.Domain.Enum;
-
 namespace M27.MetaBlog.Application.UseCases.User.Common;
 
 public class UserOutput
