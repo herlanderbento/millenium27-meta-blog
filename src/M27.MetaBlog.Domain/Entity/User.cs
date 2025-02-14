@@ -46,7 +46,7 @@ public class User: AggregateRoot
 
     public void ChangePassword(string? password)
     {
-        Password = password;
+        Password = password ?? Password;
     }
     
     public void Activate()

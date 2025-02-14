@@ -9,12 +9,11 @@ builder.Configuration
     .AddJsonFile("appsettings.Migrations.json", optional: true, reloadOnChange: true)
     .AddEnvironmentVariables();
 
-//builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("Jwt"));
 builder.Services
     .AddAppConections(builder.Configuration)
     .AddSecurity(builder.Configuration)
     .AddUseCases()
-    
+    .AddStorage(builder.Configuration)
     .AddAndConfigureControllers()
     .AddHttpLogging(logging =>
     {
@@ -36,26 +35,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
-
 app.Run();
 
-/*
-using System;
-using System.Security.Cryptography;
-
-class Program
-{
-    static void Main()
-    {
-        using var rsa = RSA.Create(2048);
-        
-        // Exportando a chave privada
-        var privateKey = Convert.ToBase64String(rsa.ExportRSAPrivateKey());
-        Console.WriteLine("Private Key:\n" + privateKey + "\n");
-
-        // Exportando a chave pública
-        var publicKey = Convert.ToBase64String(rsa.ExportRSAPublicKey());
-        Console.WriteLine("Public Key:\n" + publicKey);
-    }
-}
-*/
+public partial class Program { }

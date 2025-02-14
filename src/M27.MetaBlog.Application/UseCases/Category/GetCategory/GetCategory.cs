@@ -11,13 +11,19 @@ public class GetCategory : IGetCategory
     private readonly IUnitOfWork _unitOfWork;
 
 
-    public GetCategory(ICategoryRepository categoryRepository, IUnitOfWork unitOfWork)
+    public GetCategory(
+        ICategoryRepository categoryRepository, 
+        IUnitOfWork unitOfWork
+        )
     {
         _categoryRepository = categoryRepository;
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<CategoryOutput> Handle(GetCategoryInput input, CancellationToken cancellationToken)
+    public async Task<CategoryOutput> Handle(
+        GetCategoryInput input, 
+        CancellationToken cancellationToken
+        )
     {
        var category = await _categoryRepository.GetById(input.Id, cancellationToken);
        

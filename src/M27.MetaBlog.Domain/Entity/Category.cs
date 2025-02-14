@@ -1,5 +1,6 @@
 using M27.MetaBlog.Domain.Shared;
 using M27.MetaBlog.Domain.Shared.Validation;
+using M27.MetaBlog.Domain.Validator;
 
 namespace M27.MetaBlog.Domain.Entity;
 
@@ -43,11 +44,6 @@ public class Category: AggregateRoot
     
     private void Validate()
     {
-        DomainValidation.NotNullOrEmpty(Name, nameof(Name));
-        DomainValidation.MinLength(Name, 3, nameof(Name));
-        DomainValidation.MaxLength(Name, 255, nameof(Name));
-
-        DomainValidation.NotNull(Description, nameof(Description));
-        DomainValidation.MaxLength(Description, 10_000, nameof(Description));
+        CategoryValidator.Validate(Name, Description);
     }
 }

@@ -35,6 +35,7 @@ public static class UseCasesConfiguration
         services.AddTransient<ICryptography, BCryptHasher>();
         services.AddSingleton<ITokenProvider, JwtTokenService>();
         services.AddTransient<ICategoryRepository, CategoryRepository>();
+        services.AddTransient<IPostRepository, PostRepository>();
         
         return services;
     }
