@@ -1,7 +1,6 @@
 using M27.MetaBlog.Domain.Entity;
 using M27.MetaBlog.Domain.Repository;
 using M27.MetaBlog.Domain.Shared.SearchableRepository;
-using M27.MetaBlog.Infra.Data.Mappers;
 using Microsoft.EntityFrameworkCore;
 
 namespace M27.MetaBlog.Infra.Data.Repositories;
@@ -10,12 +9,11 @@ public class PostRepository(MetaBlogDbContext context) : IPostRepository
 {
     
     private readonly MetaBlogDbContext _context = context;
-    private DbSet<PostModel> PostModels => _context.Set<PostModel>();
+    private DbSet<Post> PostModels => _context.Set<Post>();
     
     public async Task Insert(Post aggregate, CancellationToken cancellationToken)
     {
-        var modelProps = PostMapper.ToModel(aggregate);
-        await PostModels.AddAsync(modelProps, cancellationToken);
+        await PostModels.AddAsync(aggregate, cancellationToken);
     }
 
     public async Task<Post> GetById(Guid id, CancellationToken cancellationToken)
@@ -23,20 +21,18 @@ public class PostRepository(MetaBlogDbContext context) : IPostRepository
         var model = await PostModels
             .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
     
-        return model is not null ? PostMapper.ToEntity(model) : null;
+        return model!;
     }
 
 
     public async Task Update(Post aggregate, CancellationToken cancellationToken)
     {
-        var modelProps = PostMapper.ToModel(aggregate);
-        await Task.FromResult(PostModels.Update(modelProps));
+        await Task.FromResult(PostModels.Update(aggregate));
     }
 
     public async Task Delete(Post aggregate, CancellationToken cancellationToken)
     {
-        var modelProps = PostMapper.ToModel(aggregate);
-        await Task.FromResult(PostModels.Update(modelProps));
+        await Task.FromResult(PostModels.Update(aggregate));
     }
 
     public async Task<SearchOutput<Post>> Search(SearchInput input, CancellationToken cancellationToken)
@@ -56,12 +52,12 @@ public class PostRepository(MetaBlogDbContext context) : IPostRepository
             input.Page, 
             input.PerPage, 
             total, 
-            items.Cast<object>().ToList()
+            items
             );
     }
     
-    private IQueryable<PostModel> AddOrderToQuery(
-        IQueryable<PostModel> query,
+    private IQueryable<Post> AddOrderToQuery(
+        IQueryable<Post> query,
         string orderProperty,
         SearchOrder order
     )

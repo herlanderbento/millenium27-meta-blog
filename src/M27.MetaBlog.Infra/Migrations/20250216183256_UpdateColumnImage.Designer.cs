@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace M27.MetaBlog.Infra.Migrations
 {
     [DbContext(typeof(MetaBlogDbContext))]
-    [Migration("20250215090502_CreateTables")]
-    partial class CreateTables
+    [Migration("20250216183256_UpdateColumnImage")]
+    partial class UpdateColumnImage
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace M27.MetaBlog.Infra.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("M27.MetaBlog.Infra.Data.CategoryModel", b =>
+            modelBuilder.Entity("M27.MetaBlog.Domain.Entity.Category", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -55,7 +55,7 @@ namespace M27.MetaBlog.Infra.Migrations
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("M27.MetaBlog.Infra.Data.PostModel", b =>
+            modelBuilder.Entity("M27.MetaBlog.Domain.Entity.Post", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -67,9 +67,6 @@ namespace M27.MetaBlog.Infra.Migrations
                     b.Property<Guid>("CategoryId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("CategoryModelId")
-                        .HasColumnType("uuid");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -78,9 +75,8 @@ namespace M27.MetaBlog.Infra.Migrations
                         .HasMaxLength(10000)
                         .HasColumnType("character varying(10000)");
 
-                    b.Property<string>("ImagePath")
-                        .HasMaxLength(500)
-                        .HasColumnType("character varying(500)")
+                    b.Property<string>("Image")
+                        .HasColumnType("text")
                         .HasColumnName("Image");
 
                     b.Property<bool>("Published")
@@ -99,23 +95,16 @@ namespace M27.MetaBlog.Infra.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid?>("UserModelId")
-                        .HasColumnType("uuid");
-
                     b.HasKey("Id");
 
                     b.HasIndex("AuthorId");
 
                     b.HasIndex("CategoryId");
 
-                    b.HasIndex("CategoryModelId");
-
-                    b.HasIndex("UserModelId");
-
                     b.ToTable("Posts");
                 });
 
-            modelBuilder.Entity("M27.MetaBlog.Infra.Data.UserModel", b =>
+            modelBuilder.Entity("M27.MetaBlog.Domain.Entity.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -153,41 +142,19 @@ namespace M27.MetaBlog.Infra.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("M27.MetaBlog.Infra.Data.PostModel", b =>
+            modelBuilder.Entity("M27.MetaBlog.Domain.Entity.Post", b =>
                 {
-                    b.HasOne("M27.MetaBlog.Infra.Data.UserModel", "Author")
+                    b.HasOne("M27.MetaBlog.Domain.Entity.User", null)
                         .WithMany()
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("M27.MetaBlog.Infra.Data.CategoryModel", "Category")
+                    b.HasOne("M27.MetaBlog.Domain.Entity.Category", null)
                         .WithMany()
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("M27.MetaBlog.Infra.Data.CategoryModel", null)
-                        .WithMany("Posts")
-                        .HasForeignKey("CategoryModelId");
-
-                    b.HasOne("M27.MetaBlog.Infra.Data.UserModel", null)
-                        .WithMany("Posts")
-                        .HasForeignKey("UserModelId");
-
-                    b.Navigation("Author");
-
-                    b.Navigation("Category");
-                });
-
-            modelBuilder.Entity("M27.MetaBlog.Infra.Data.CategoryModel", b =>
-                {
-                    b.Navigation("Posts");
-                });
-
-            modelBuilder.Entity("M27.MetaBlog.Infra.Data.UserModel", b =>
-                {
-                    b.Navigation("Posts");
                 });
 #pragma warning restore 612, 618
         }

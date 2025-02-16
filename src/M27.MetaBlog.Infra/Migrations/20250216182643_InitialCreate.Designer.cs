@@ -3,6 +3,7 @@ using System;
 using M27.MetaBlog.Infra.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace M27.MetaBlog.Infra.Migrations
 {
     [DbContext(typeof(MetaBlogDbContext))]
-    partial class MetaBlogDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250216182643_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -74,7 +77,7 @@ namespace M27.MetaBlog.Infra.Migrations
 
                     b.Property<string>("Image")
                         .HasColumnType("text")
-                        .HasColumnName("Image");
+                        .HasColumnName("image");
 
                     b.Property<bool>("Published")
                         .HasColumnType("boolean");

@@ -14,10 +14,10 @@ public class CreatePostApiInput
     public Guid CategoryId { get; set; }
 
     [FromForm]
-    public string Title { get; set; }
+    public required  string Title { get; set; }
 
     [FromForm]
-    public string Description { get; set; }
+    public required  string Description { get; set; }
 
     [FromForm]
     public bool Published { get; set; }

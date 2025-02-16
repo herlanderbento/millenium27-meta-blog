@@ -22,24 +22,23 @@ public class Post: AggregateRoot
         Guid categoryId,
         string title, 
         string description, 
-        bool published, 
-        string? image = null,
-        Slug? slug = null 
+        bool published
     ) : base()
     {
         AuthorId = authorId;
         CategoryId = categoryId;
         Title = title;
-        Slug = slug ?? Slug.Create(title);
         Description = description;
         Published = published;
-        Image = new Image(image ?? string.Empty);
+        
+        Slug = Slug.CreateFromText(title);
 
         CreatedAt = DateTime.UtcNow;
         UpdatedAt = DateTime.UtcNow;
 
         Validate();
     }
+
 
     public void Update(
         Guid? categoryId,

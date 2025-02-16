@@ -1,9 +1,10 @@
-﻿
-namespace M27.MetaBlog.Domain.ValueObject;
+﻿namespace M27.MetaBlog.Domain.ValueObject;
 
-public class Image :Shared.ValueObject
+public class Image : Shared.ValueObject
 {
-    public string Path { get; }
+    public string Path { get; private set; }
+
+    private Image() { }
 
     public Image(string path) => Path = path;
     

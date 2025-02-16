@@ -21,14 +21,13 @@ public static class StorageConfiguration
 
         services.AddSingleton<IAmazonS3>(provider =>
         {
+            
             var awsOptions = new AmazonS3Config
             {
-                RegionEndpoint = RegionEndpoint.GetBySystemName(options.Region),
-                //ForcePathStyle = true,
-               // ServiceURL = $"https://{options.Region}.console.amazon.com"
+                RegionEndpoint = RegionEndpoint.GetBySystemName(options?.Region ?? "us-east-1"),
                 
             };
-
+            
             return new AmazonS3Client(options.AccessKey, options.SecretKey, awsOptions);
         });
 
