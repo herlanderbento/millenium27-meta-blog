@@ -9,10 +9,10 @@
 </center>
 <br />
 
-
 ## How to run?
 
 - Simply clone the Repository:
+
 ```sh
 git clone https://github.com/herlanderbento/millenium27-meta-blog.git
 ```
@@ -26,3 +26,17 @@ git clone https://github.com/herlanderbento/millenium27-meta-blog.git
 - Rider or Visual Studio 2022
 - .NET 8 SDK installed
 - Docker or Docker Desktop
+
+## Running with Docker
+
+To start the application and database using Docker, use the following command:
+
+```sh
+docker-compose up -d
+```
+
+This will spin up the necessary containers for the application and database.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
