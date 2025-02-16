@@ -38,7 +38,7 @@ public class UsersController(IMediator mediator, RequestValidator requestValidat
     
 
     [HttpGet]
-    //[Authorize(Policy = "AdminOnly")]
+    [Authorize(Policy = "AdminOnly")]
     [ProducesResponseType(typeof(ListUsersOutput), StatusCodes.Status200OK)]
     public async Task<IActionResult> List(
         CancellationToken cancellationToken,        
