@@ -32,6 +32,15 @@ public class CategoryRepository(MetaBlogDbContext context): ICategoryRepository
         return model!;
     }
 
+    public async Task<IReadOnlyList<Category>> GetListByIds(List<Guid> ids, CancellationToken cancellationToken)
+    {
+        var models = await Categories.AsNoTracking()
+            .Where(category => ids.Contains(category.Id))
+            .ToListAsync();
+        
+        return models;
+    }
+
     public Task Update(Category aggregate, CancellationToken cancellationToken)
     {
         return Task.FromResult(Categories.Update(aggregate));

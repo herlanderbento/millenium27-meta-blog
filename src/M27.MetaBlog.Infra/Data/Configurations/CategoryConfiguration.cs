@@ -9,9 +9,13 @@ internal class CategoryConfiguration : IEntityTypeConfiguration<Category>
     public void Configure(EntityTypeBuilder<Category> builder)
     {
         builder.HasKey(category => category.Id);
+        
         builder.Property(category => category.Name)
-            .HasMaxLength(255);
+            .HasMaxLength(255)
+            .IsRequired();
+        
         builder.Property(category => category.Description)
-            .HasMaxLength(10_000);
+            .HasMaxLength(4_000)
+            .IsRequired();
     }
 }

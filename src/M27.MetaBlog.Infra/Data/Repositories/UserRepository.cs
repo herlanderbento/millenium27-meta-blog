@@ -34,6 +34,16 @@ public class UserRepository(MetaBlogDbContext context) : IUserRepository
         return model!;
     }
     
+    public async Task<IReadOnlyList<User>> GetListByIds(List<Guid> ids, CancellationToken cancellationToken)
+    {
+        var models = await Users.AsNoTracking()
+            .Where(user => ids.Contains(user.Id))
+            .ToListAsync();
+        
+        return models;
+    }
+
+    
     public async Task<SearchOutput<User>> Search(SearchInput input, CancellationToken cancellationToken)
     {
         var toSkip = (input.Page - 1) * input.PerPage;

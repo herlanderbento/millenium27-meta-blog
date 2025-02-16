@@ -7,18 +7,20 @@ public static class PostMapper
 {
     public static PostModel ToModel(Post entity)
     {
-        return new PostModel(
-            entity.Id,
-            entity.AuthorId,
-            entity.CategoryId,
-            entity.Title,
-            entity.Slug.Value,
-            entity.Description,
-            entity.Published,
-            entity.Image?.Path,
-            entity.CreatedAt,
-            entity.UpdatedAt
-        );
+        return new PostModel
+        {
+            Id = entity.Id,
+            AuthorId = entity.AuthorId,
+            CategoryId = entity.CategoryId,
+            Title = entity.Title,
+            Slug = entity.Slug.Value,
+            Description = entity.Description,
+            ImagePath = entity.Image.Path,
+            Published = entity.Published,
+            CreatedAt = entity.CreatedAt,
+            UpdatedAt = entity.UpdatedAt
+
+        };
     }
 
     public static Post ToEntity(PostModel model)

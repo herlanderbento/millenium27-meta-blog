@@ -5,7 +5,7 @@ public class StorageServiceOptions
     public const string ConfigurationSection = "Storage";
     public string BucketName { get; set; } = null!;
     public string Region { get; set; } = null!;
-    public string AccessKey { get; set; } = null!; // Adicionado
-    public string SecretKey { get; set; } = null!; // Adicionado
+    public string AccessKey { get; set; } = null!; 
+    public string SecretKey { get; set; } = null!;
 
 }

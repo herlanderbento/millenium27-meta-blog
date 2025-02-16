@@ -51,10 +51,20 @@ public class CreatePost : ICreatePost
             input.Published
         );
 
-        await _postRepository.Insert(entity, cancellationToken);
-        await _unitOfWork.Commit(cancellationToken);
+        try
+        {
+            await UploadImage(input, entity, cancellationToken);
+            await _postRepository.Insert(entity, cancellationToken);
+            await _unitOfWork.Commit(cancellationToken);
         
-        return PostOutput.FromPost(entity, user, category);
+            return PostOutput.FromPost(entity);
+        }
+        catch (Exception e)
+        {
+            await ClearStorage(input, entity, cancellationToken);
+            throw;
+        }
+        
     }
 
     private async Task ClearStorage(
@@ -63,7 +73,7 @@ public class CreatePost : ICreatePost
         CancellationToken cancellationToken
         )
     {
-        await _storageService.Delete(post.Image!.Path, cancellationToken);
+        await _storageService.Delete(post.Image.Path, cancellationToken);
     }
 
     private async Task UploadImage(
@@ -75,7 +85,7 @@ public class CreatePost : ICreatePost
         var fileName = StorageFileName.Create(
             post.Id,
             nameof(post.Image), 
-            input.Image!.Extension
+            input.Image.Extension
             );
         
         var uploadFilePath = await _storageService.Upload(

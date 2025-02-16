@@ -23,7 +23,10 @@ public static class StorageConfiguration
         {
             var awsOptions = new AmazonS3Config
             {
-                RegionEndpoint = RegionEndpoint.GetBySystemName(options.Region)
+                RegionEndpoint = RegionEndpoint.GetBySystemName(options.Region),
+                //ForcePathStyle = true,
+               // ServiceURL = $"https://{options.Region}.console.amazon.com"
+                
             };
 
             return new AmazonS3Client(options.AccessKey, options.SecretKey, awsOptions);

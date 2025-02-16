@@ -8,9 +8,9 @@ public class CreatePostInput: IRequest<PostOutput>
     public Guid AuthorId { get; set; }
     public Guid CategoryId { get; set; }
     public string Title { get; set; }
-    public string Description { get; private set; }
-    public bool Published { get; private set; }
-    public FileInput? Image { get; private set; }
+    public string Description { get; set; }
+    public bool Published { get;  set; }
+    public FileInput? Image { get; set; }
 
     public CreatePostInput(
         Guid authorId,

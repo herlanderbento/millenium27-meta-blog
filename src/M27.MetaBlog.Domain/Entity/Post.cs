@@ -15,10 +15,7 @@ public class Post: AggregateRoot
     public DateTime UpdatedAt { get; private set; }
     
     public Guid AuthorId { get; private set; }
-    public User Author { get; private set; }
-    
     public Guid CategoryId { get; private set; }
-    public Category Category { get; private set; } 
     
     public Post(
         Guid authorId, 
