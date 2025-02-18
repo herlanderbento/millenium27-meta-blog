@@ -8,6 +8,7 @@ using M27.MetaBlog.Application.UseCases.Post.DeletePost;
 using M27.MetaBlog.Application.UseCases.Post.GetPost;
 using M27.MetaBlog.Application.UseCases.Post.ListPosts;
 using M27.MetaBlog.Domain.Shared.SearchableRepository;
+using Microsoft.AspNetCore.Authorization;
 
 namespace M27.MetaBlog.Api.Controllers;
 
@@ -19,6 +20,7 @@ public class PostsController(IMediator mediator, RequestValidator requestValidat
     private readonly RequestValidator _requestValidator = requestValidator;
     
     [HttpPost]
+    [Authorize(Roles = "Authenticated")]
     [Consumes("multipart/form-data")]
     [ProducesResponseType(typeof(ApiPresenter<PostOutput>), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
@@ -73,6 +75,7 @@ public class PostsController(IMediator mediator, RequestValidator requestValidat
     }
 
     [HttpPatch("{id:guid}")]
+    [Authorize(Roles = "Authenticated")]
     [Consumes("multipart/form-data")]
     [ProducesResponseType(typeof(ApiPresenter<PostOutput>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
@@ -89,6 +92,7 @@ public class PostsController(IMediator mediator, RequestValidator requestValidat
     }
 
     [HttpDelete("{id:guid}")]
+    [Authorize(Roles = "Authenticated")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Delete(

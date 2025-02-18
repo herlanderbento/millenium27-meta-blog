@@ -9,6 +9,7 @@ using M27.MetaBlog.Application.UseCases.Category.ListCategories;
 using M27.MetaBlog.Application.UseCases.Category.UpdateCategory;
 using M27.MetaBlog.Domain.Shared.SearchableRepository;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace M27.MetaBlog.Api.Controllers;
@@ -21,6 +22,7 @@ public class CategoriesController(IMediator mediator, RequestValidator requestVa
     private readonly RequestValidator _requestValidator = requestValidator;
     
     [HttpPost]
+    [Authorize(Roles = "Admin")]
     [ProducesResponseType(typeof(ApiPresenter<CategoryOutput>), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status422UnprocessableEntity)]
@@ -70,6 +72,7 @@ public class CategoriesController(IMediator mediator, RequestValidator requestVa
     }
     
     [HttpPatch("{id:guid}")]
+    [Authorize(Roles = "Admin")]
     [ProducesResponseType(typeof(ApiPresenter<CategoryOutput>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status422UnprocessableEntity)]
@@ -93,6 +96,7 @@ public class CategoriesController(IMediator mediator, RequestValidator requestVa
     }
     
     [HttpDelete("{id:guid}")]
+    [Authorize(Roles = "Admin")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Delete(
