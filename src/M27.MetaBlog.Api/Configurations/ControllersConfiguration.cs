@@ -46,7 +46,7 @@ public static class ControllersConfiguration
                 Name = "Authorization",
                 Type = SecuritySchemeType.Http,
                 BearerFormat = "JWT",
-                Scheme = "Bearer"
+                Scheme = "bearer"
             });
 
             options.OperationFilter<AuthOperationFilter>();

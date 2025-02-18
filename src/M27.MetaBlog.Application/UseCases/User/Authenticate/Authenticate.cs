@@ -35,14 +35,8 @@ public class Authenticate : IAuthenticate
         {
             NotFoundException.ThrowIfNull(user, "Email or password incorrect");
         }
-        
-        var accessToken = _tokenProvider.GenerateToken(
-            new
-        {
-            user.Id, 
-            user.Email, 
-            user.Role
-        });
+
+        var accessToken = _tokenProvider.GenerateToken(user);
 
         var refreshToken = _tokenProvider.GenerateRefreshToken();
 
