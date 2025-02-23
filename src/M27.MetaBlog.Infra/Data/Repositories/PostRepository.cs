@@ -1,6 +1,7 @@
 using M27.MetaBlog.Domain.Entity;
 using M27.MetaBlog.Domain.Repository;
 using M27.MetaBlog.Domain.Shared.SearchableRepository;
+using M27.MetaBlog.Domain.ValueObject;
 using Microsoft.EntityFrameworkCore;
 
 namespace M27.MetaBlog.Infra.Data.Repositories;
@@ -23,8 +24,14 @@ public class PostRepository(MetaBlogDbContext context) : IPostRepository
     
         return model!;
     }
-
-
+    
+    public async Task<Post> GetBySlug(Slug slug, CancellationToken cancellationToken)
+    {
+        var model = await PostModels
+            .FirstOrDefaultAsync(x => x.Slug == slug, cancellationToken);
+        return model!;
+    }
+    
     public async Task Update(Post aggregate, CancellationToken cancellationToken)
     {
         await Task.FromResult(PostModels.Update(aggregate));
@@ -55,7 +62,7 @@ public class PostRepository(MetaBlogDbContext context) : IPostRepository
             items
             );
     }
-    
+
     private IQueryable<Post> AddOrderToQuery(
         IQueryable<Post> query,
         string orderProperty,

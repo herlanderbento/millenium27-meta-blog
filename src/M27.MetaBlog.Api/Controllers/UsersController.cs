@@ -62,7 +62,7 @@ public class UsersController(IMediator mediator, RequestValidator requestValidat
         );
     }
     
-    [Authorize(Roles = "Authenticated")]
+    [Authorize]
     [HttpGet("{id:guid}")]
     [ProducesResponseType(typeof(ApiPresenter<UserOutput>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
@@ -75,7 +75,7 @@ public class UsersController(IMediator mediator, RequestValidator requestValidat
         return Ok(new ApiPresenter<UserOutput>(output));
     }
 
-    [Authorize(Roles = "Authenticated")]
+    [Authorize]
     [HttpPatch("{id:guid}")]
     [ProducesResponseType(typeof(ApiPresenter<UserOutput>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]

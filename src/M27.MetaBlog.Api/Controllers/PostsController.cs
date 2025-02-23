@@ -6,6 +6,7 @@ using M27.MetaBlog.Api.Validators;
 using M27.MetaBlog.Application.UseCases.Post.Common;
 using M27.MetaBlog.Application.UseCases.Post.DeletePost;
 using M27.MetaBlog.Application.UseCases.Post.GetPost;
+using M27.MetaBlog.Application.UseCases.Post.GetPostBySlug;
 using M27.MetaBlog.Application.UseCases.Post.ListPosts;
 using M27.MetaBlog.Domain.Shared.SearchableRepository;
 using Microsoft.AspNetCore.Authorization;
@@ -20,7 +21,7 @@ public class PostsController(IMediator mediator, RequestValidator requestValidat
     private readonly RequestValidator _requestValidator = requestValidator;
     
     [HttpPost]
-    [Authorize(Roles = "Authenticated")]
+    [Authorize]
     [Consumes("multipart/form-data")]
     [ProducesResponseType(typeof(ApiPresenter<PostOutput>), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
@@ -73,9 +74,21 @@ public class PostsController(IMediator mediator, RequestValidator requestValidat
         var output = await _mediator.Send(new GetPostInput(id), cancellationToken);
         return Ok(new ApiPresenter<PostOutput>(output));
     }
+    
+    [HttpGet("slug/{slug}")]
+    [ProducesResponseType(typeof(PostOutput), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetBySlug(
+        [FromRoute] string slug,
+        CancellationToken cancellationToken
+    )
+    {
+        var output = await _mediator.Send(new GetPostBySlugInput(slug), cancellationToken);
+        return Ok(new ApiPresenter<PostOutput>(output));
+    }
 
     [HttpPatch("{id:guid}")]
-    [Authorize(Roles = "Authenticated")]
+    [Authorize]
     [Consumes("multipart/form-data")]
     [ProducesResponseType(typeof(ApiPresenter<PostOutput>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
@@ -92,7 +105,7 @@ public class PostsController(IMediator mediator, RequestValidator requestValidat
     }
 
     [HttpDelete("{id:guid}")]
-    [Authorize(Roles = "Authenticated")]
+    [Authorize]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Delete(
