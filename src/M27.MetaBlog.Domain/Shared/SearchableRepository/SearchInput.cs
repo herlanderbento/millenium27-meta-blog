@@ -1,17 +1,17 @@
 ﻿namespace M27.MetaBlog.Domain.Shared.SearchableRepository;
 
-public class SearchInput
+public class SearchInput<TSearch>
 {
     public int Page { get; set; }
     public int PerPage { get; set; }
-    public string Search { get; set; }
+    public TSearch Search { get; set; }
     public string OrderBy { get; set; }
     public SearchOrder Order { get; set; }
 
     public SearchInput(
         int page, 
         int perPage, 
-        string search, 
+        TSearch search, 
         string orderBy, 
         SearchOrder order)
     {

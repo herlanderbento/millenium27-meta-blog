@@ -4,7 +4,7 @@ using MediatR;
 
 namespace M27.MetaBlog.Application.UseCases.User.ListUsers;
 
-public class ListUsersInput : PaginatedListInput, IRequest<ListUsersOutput>
+public class ListUsersInput : PaginatedListInput<string>, IRequest<ListUsersOutput>
 {
     public ListUsersInput(
         int page = 1,

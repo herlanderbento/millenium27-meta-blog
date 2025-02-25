@@ -4,7 +4,7 @@ using MediatR;
 
 namespace M27.MetaBlog.Application.UseCases.Category.ListCategories;
 
-public class ListCategoriesInput: PaginatedListInput, IRequest<ListCategoriesOutput>
+public class ListCategoriesInput: PaginatedListInput<string>, IRequest<ListCategoriesOutput>
 {
     public ListCategoriesInput(
         int page = 1,

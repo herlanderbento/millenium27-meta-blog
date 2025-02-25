@@ -2,17 +2,18 @@
 
 namespace M27.MetaBlog.Application.Common;
 
-public abstract class PaginatedListInput
+public abstract class PaginatedListInput<TSearch>
 {
     public int Page { get; set; }
     public int PerPage { get; set; }
-    public string Search { get; set; }
+    public TSearch Search { get; set; }
     public string Sort { get; set; }
     public SearchOrder Dir { get; set; }
+
     public PaginatedListInput(
         int page, 
         int perPage, 
-        string search, 
+        TSearch search, 
         string sort, 
         SearchOrder dir)
     {
@@ -23,6 +24,6 @@ public abstract class PaginatedListInput
         Dir = dir;
     }
 
-    public SearchInput ToSearchInput()
+    public SearchInput<TSearch> ToSearchInput()
         => new(Page, PerPage, Search, Sort, Dir);
 }

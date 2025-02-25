@@ -8,6 +8,7 @@ using M27.MetaBlog.Application.UseCases.Post.DeletePost;
 using M27.MetaBlog.Application.UseCases.Post.GetPost;
 using M27.MetaBlog.Application.UseCases.Post.GetPostBySlug;
 using M27.MetaBlog.Application.UseCases.Post.ListPosts;
+using M27.MetaBlog.Domain.Repository;
 using M27.MetaBlog.Domain.Shared.SearchableRepository;
 using Microsoft.AspNetCore.Authorization;
 
@@ -44,8 +45,9 @@ public class PostsController(IMediator mediator, RequestValidator requestValidat
     public async Task<IActionResult> List(
         CancellationToken cancellationToken,        
         [FromQuery] int? page = null,
-        [FromQuery(Name = "per_page")] int? perPage = null,
+        [FromQuery] int? perPage = null,
         [FromQuery] string? search = null,
+        [FromQuery] Guid? categoryId = null,
         [FromQuery] string? sort = null,
         [FromQuery] SearchOrder? dir = null
     )
@@ -53,7 +55,18 @@ public class PostsController(IMediator mediator, RequestValidator requestValidat
         var input = new ListPostsInput();
         if (page is not null) input.Page = page.Value;
         if (perPage is not null) input.PerPage = perPage.Value;
-        if (!String.IsNullOrWhiteSpace(search)) input.Search = search;
+        if (!String.IsNullOrWhiteSpace(search))
+        {
+            input.Search ??= new PostSearch();
+            input.Search.Title = search;
+        }
+        
+        if (!String.IsNullOrWhiteSpace(categoryId.ToString()))
+        {
+            input.Search ??= new PostSearch();
+            input.Search.CategoryId = categoryId;
+        }
+
         if (!String.IsNullOrWhiteSpace(sort)) input.Sort = sort;
         if (dir is not null) input.Dir = dir.Value;
         

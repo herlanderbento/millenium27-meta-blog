@@ -1,10 +1,10 @@
 ﻿namespace M27.MetaBlog.Domain.Shared.SearchableRepository;
 
-public interface ISearchableRepository<Taggregate>
-    where Taggregate : AggregateRoot
+public interface ISearchableRepository<TAggregate, TSearch>
+    where TAggregate : AggregateRoot
 {
-    Task<SearchOutput<Taggregate>> Search(
-        SearchInput input,
+    Task<SearchOutput<TAggregate>> Search(
+        SearchInput<TSearch> input,
         CancellationToken cancellationToken
     );
 }

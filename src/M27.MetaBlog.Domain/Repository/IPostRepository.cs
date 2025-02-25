@@ -5,7 +5,15 @@ using M27.MetaBlog.Domain.ValueObject;
 
 namespace M27.MetaBlog.Domain.Repository;
 
-public interface IPostRepository : IRepository<Post>, ISearchableRepository<Post>
+public class PostSearch
 {
-    public Task<Post> GetBySlug(Slug slug, CancellationToken cancellationToken = default);
+    public string? Title { get; set; }
+    public Guid? CategoryId { get; set; }
+    public Guid? AuthorId { get; set; }
+}
+
+
+public interface IPostRepository : IRepository<Post>, ISearchableRepository<Post, PostSearch>
+{
+    Task<Post> GetBySlug(Slug slug, CancellationToken cancellationToken = default);
 }

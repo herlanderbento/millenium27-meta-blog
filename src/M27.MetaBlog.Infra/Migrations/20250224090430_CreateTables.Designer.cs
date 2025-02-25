@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace M27.MetaBlog.Infra.Migrations
 {
     [DbContext(typeof(MetaBlogDbContext))]
-    [Migration("20250216183256_UpdateColumnImage")]
-    partial class UpdateColumnImage
+    [Migration("20250224090430_CreateTables")]
+    partial class CreateTables
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

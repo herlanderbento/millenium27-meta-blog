@@ -18,7 +18,7 @@ public class ListCategories : IListCategories
         CancellationToken cancellationToken
         )
     {
-        var searchInput = new SearchInput(
+        var searchInput = new SearchInput<string>(
             input.Page,
             input.PerPage,
             input.Search,

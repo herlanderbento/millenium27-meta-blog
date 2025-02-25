@@ -42,13 +42,18 @@ public class PostRepository(MetaBlogDbContext context) : IPostRepository
         await Task.FromResult(PostModels.Update(aggregate));
     }
 
-    public async Task<SearchOutput<Post>> Search(SearchInput input, CancellationToken cancellationToken)
+    public async Task<SearchOutput<Post>> Search(SearchInput<PostSearch> input, CancellationToken cancellationToken)
     {
         var toSkip = (input.Page - 1) * input.PerPage;
         var query = PostModels.AsNoTracking();
+        
         query = AddOrderToQuery(query, input.OrderBy, input.Order);
-        if(!String.IsNullOrWhiteSpace(input.Search))
-            query = query.Where(x => x.Title.Contains(input.Search));
+        if (!String.IsNullOrWhiteSpace(input.Search?.Title))
+            query = query.Where(x => x.Title.Contains(input.Search.Title!));
+        
+        if (!String.IsNullOrWhiteSpace(input.Search?.CategoryId.ToString()))
+            query = query.Where(x => x.CategoryId == input.Search.CategoryId!);
+        
         var total = await query.CountAsync();
         var items = await query
             .Skip(toSkip)

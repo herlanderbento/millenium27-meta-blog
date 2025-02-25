@@ -44,7 +44,7 @@ public class UserRepository(MetaBlogDbContext context) : IUserRepository
     }
 
     
-    public async Task<SearchOutput<User>> Search(SearchInput input, CancellationToken cancellationToken)
+    public async Task<SearchOutput<User>> Search(SearchInput<string> input, CancellationToken cancellationToken)
     {
         var toSkip = (input.Page - 1) * input.PerPage;
         var query = Users.AsNoTracking();

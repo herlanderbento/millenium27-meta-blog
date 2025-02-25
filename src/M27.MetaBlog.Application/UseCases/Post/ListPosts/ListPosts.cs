@@ -27,6 +27,7 @@ public class ListPosts: IListPosts
         CancellationToken cancellationToken
         )
     {
+        
         var searchOutput = await _postRepository.Search(
             input.ToSearchInput(), 
             cancellationToken);

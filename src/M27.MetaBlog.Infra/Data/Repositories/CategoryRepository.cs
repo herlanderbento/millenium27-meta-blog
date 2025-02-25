@@ -51,7 +51,7 @@ public class CategoryRepository(MetaBlogDbContext context): ICategoryRepository
         return Task.FromResult(Categories.Remove(aggregate));
     }
 
-    public async Task<SearchOutput<Category>> Search(SearchInput input, CancellationToken cancellationToken)
+    public async Task<SearchOutput<Category>> Search(SearchInput<string> input, CancellationToken cancellationToken)
     {
         var toSkip = (input.Page - 1) * input.PerPage;
         var query = Categories.AsNoTracking();
