@@ -28,10 +28,10 @@ public class JwtHs256TokenService: ITokenProvider
 
         var claims = new List<Claim>
         {
-            new Claim(JwtRegisteredClaimNames.Sub, payload.Id.ToString()!),
-            new Claim(JwtRegisteredClaimNames.Name, payload.Name.ToString()!),
-            new Claim(JwtRegisteredClaimNames.Email, payload.Email.ToString()!),
-            new Claim("role", payload.Role.ToString()!)
+            new Claim(JwtRegisteredClaimNames.Sub, payload.Id.ToString()),
+            new Claim(JwtRegisteredClaimNames.Name, payload.Name.ToString()),
+            new Claim(JwtRegisteredClaimNames.Email, payload.Email.ToString()),
+            new Claim("role", payload.Role.ToString())
         };
 
         var token = new JwtSecurityToken(

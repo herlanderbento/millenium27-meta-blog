@@ -6,9 +6,7 @@ namespace M27.MetaBlog.Api.ApiModels.Post;
 
 public class CreatePostApiInput
 {
-
-    [FromForm]
-    public Guid AuthorId { get; set; }
+    
 
     [FromForm]
     public Guid CategoryId { get; set; }
@@ -25,9 +23,9 @@ public class CreatePostApiInput
     [FromForm]
     public IFormFile? Image { get; set; }
 
-    public CreatePostInput ToCreatePostInput()
+    public CreatePostInput ToCreatePostInput(Guid authorId)
         => new(
-            AuthorId,
+            authorId,
             CategoryId,
             Title,
             Description,

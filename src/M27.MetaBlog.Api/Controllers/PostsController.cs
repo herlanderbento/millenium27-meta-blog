@@ -32,8 +32,10 @@ public class PostsController(IMediator mediator, RequestValidator requestValidat
         CancellationToken cancellationToken
     )
     {
-        var input = request.ToCreatePostInput();
+        var userId = User.FindFirst("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")!.Value;
+        var input = request.ToCreatePostInput(new Guid(userId));
         var output = await _mediator.Send(input, cancellationToken);
+        
         return CreatedAtAction(
             nameof(Create), 
             new { output.Id }, 
@@ -100,7 +102,7 @@ public class PostsController(IMediator mediator, RequestValidator requestValidat
         return Ok(new ApiPresenter<PostOutput>(output));
     }
 
-    [HttpPatch("{id:guid}")]
+    [HttpPatch("{id:guid}")]  
     [Authorize]
     [Consumes("multipart/form-data")]
     [ProducesResponseType(typeof(ApiPresenter<PostOutput>), StatusCodes.Status200OK)]

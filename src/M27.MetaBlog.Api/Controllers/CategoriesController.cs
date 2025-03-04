@@ -58,7 +58,7 @@ public class CategoriesController(IMediator mediator, RequestValidator requestVa
         var output = await _mediator.Send(input, cancellationToken);
         return Ok(new ApiPresenterList<CategoryOutput>(output));
     }
-    
+     
     [HttpGet("{id:guid}")]
     [ProducesResponseType(typeof(ApiPresenter<CategoryOutput>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]

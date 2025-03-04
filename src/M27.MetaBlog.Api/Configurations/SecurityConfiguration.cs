@@ -1,5 +1,7 @@
-using System.Security.Cryptography;
+using System.Security.Claims;
+using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 
 namespace M27.MetaBlog.Api.Configurations;
@@ -24,66 +26,35 @@ public static class SecurityConfiguration
         return services;
     }
 
+ 
     private static IServiceCollection AddJwtAuthentication(
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        var algorithm = configuration["Jwt:Algorithm"] ?? "HS256";
+        var jwtSection = configuration.GetRequiredSection("Jwt");
+        var secretKey = jwtSection["SecretKey"]
+                        ?? throw new ArgumentNullException("Jwt:SecretKey is missing in configuration.");
 
-        if (algorithm == "HS256")
-        {
-            var secretKey = configuration["Jwt:SecretKey"]
-                            ?? throw new ArgumentNullException("Jwt:SecretKey is missing in configuration.");
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
 
-            var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(secretKey));
-
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
+        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+                options.RequireHttpsMetadata = false;
+                options.SaveToken = true;
+                options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidateLifetime = true,
-                        ValidateIssuerSigningKey = true,
-                        ValidIssuer = configuration["Jwt:Issuer"],
-                        ValidAudience = configuration["Jwt:Audience"],
-                        IssuerSigningKey = key
-                    };
-                });
-        }
-        else if (algorithm == "RS256")
-        {
-            var privateKeyBase64 = configuration["Jwt:PrivateKey"]
-                                   ?? throw new ArgumentNullException("Jwt:PrivateKey is missing in configuration.");
-            var publicKeyBase64 = configuration["Jwt:PublicKey"]
-                                  ?? throw new ArgumentNullException("Jwt:PublicKey is missing in configuration.");
-
-            using var rsaPublic = RSA.Create();
-            rsaPublic.ImportRSAPublicKey(Convert.FromBase64String(publicKeyBase64), out _);
-
-            using var rsaPrivate = RSA.Create();
-            rsaPrivate.ImportRSAPrivateKey(Convert.FromBase64String(privateKeyBase64), out _);
-
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
-                {
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidateLifetime = true,
-                        ValidateIssuerSigningKey = true,
-                        ValidIssuer = configuration["Jwt:Issuer"],
-                        ValidAudience = configuration["Jwt:Audience"],
-                        IssuerSigningKey = new RsaSecurityKey(rsaPublic)
-                    };
-                });
-        }
-        else
-        {
-            throw new NotSupportedException($"JWT Algorithm '{algorithm}' is not supported.");
-        }
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = jwtSection["Issuer"],
+                    ValidAudience = jwtSection["Audience"],
+                    IssuerSigningKey = key,
+                    RoleClaimType = ClaimTypes.Role,
+                    NameClaimType = JwtRegisteredClaimNames.Sub
+                };
+            });
 
         return services;
     }
